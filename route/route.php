@@ -14,6 +14,8 @@ Route::get('',  'index/home');
 Route::get('about', 'index/about');
 
 Route::get('help', 'index/help');
+// 注册路由
+Route::get('signup', 'user/auth/create');
 
 return [
 
