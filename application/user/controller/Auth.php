@@ -4,6 +4,7 @@ namespace app\user\controller;
 
 use think\Controller;
 use think\Request;
+use app\user\model\User;
 
 class Auth extends Controller
 {
@@ -24,7 +25,9 @@ class Auth extends Controller
      */
     public function create()
     {
-        //
+        $token = $this->request->token('__token__', 'sha1');
+        $this->assign('token', $token);
+        return $this->fetch();
     }
 
     /**
@@ -35,7 +38,16 @@ class Auth extends Controller
      */
     public function save(Request $request)
     {
-        return view();
+        $requestData = $request->post();
+        // validate($requestData, 'app\user\validate\Auth') 的前部分表示传入的值,后半部分表示要使用的验证器.
+        $result = $this->validate($requestData, 'app\user\validate\Auth');
+        if (true !== $result) {
+            // redirect('user/auth/create') 是跳转到对应的 控制器/方法
+            // with('validate',$result) 则是 redirect 提供的一个快捷 flash 闪存 的方法,与 Session::flash('validate',$result); 效果一样.
+            return redirect('user/auth/create')->with('validate',$result);
+        } else {
+            return User::create($requestData);
+        }
     }
 
     /**
