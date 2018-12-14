@@ -18,6 +18,7 @@ Route::get('help', 'index/help');
 // Route::get('signup', 'user/auth/create');
 Route::resource('auth', 'user/auth');
 
+Route::resource('session', 'user/session');
 return [
 
 ];
