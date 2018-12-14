@@ -46,7 +46,8 @@ class Auth extends Controller
             // with('validate',$result) 则是 redirect 提供的一个快捷 flash 闪存 的方法,与 Session::flash('validate',$result); 效果一样.
             return redirect('user/auth/create')->with('validate',$result);
         } else {
-            return User::create($requestData);
+            $user = User::create($requestData);
+            return redirect('user/auth/read')->params(['id' => $user->id]); 
         }
     }
 
@@ -58,7 +59,9 @@ class Auth extends Controller
      */
     public function read($id)
     {
-        //
+        $user = User::find($id); // User::find($id) 是模型的一个查询语法,默认查询 $id(主键值)
+        $this->assign('user', $user);
+        return $this->fetch();
     }
 
     /**
