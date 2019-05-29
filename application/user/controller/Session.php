@@ -4,7 +4,9 @@ namespace app\user\controller;
 
 use think\Controller;
 use think\Request;
-use app\user\modal\User;
+use think\facade\Session as UserSession;
+
+use app\user\model\User;
 
 class Session extends Controller
 {
@@ -25,10 +27,16 @@ class Session extends Controller
      */
     public function create()
     {
-        //这一步的目的是将自定义 CSRF Token 传入模板当中.
-        $token = $this->request->token('__token__', 'sha1');
-        $this->assign('token', $token); // assign()为视图引擎分配一个模板变量
-        return $this->fetch(); // 加载模板输出
+        if (UserSession::has('user')) {
+            $user = UserSession::get('user');
+            return redirect('user/auth/read')->params(['id' => $user->id]);
+        } else {
+            //这一步的目的是将自定义 CSRF Token 传入模板当中.
+            $token = $this->request->token('__token__', 'sha1');
+            $this->assign('token', $token); // assign()为视图引擎分配一个模板变量
+            return $this->fetch(); // 加载模板输出
+
+        }
     }
 
     /**
@@ -44,8 +52,11 @@ class Session extends Controller
             return redirect('user/session/create')->with('validate', $result);
         } else {
             $user = User::where('email', $request->email)->find();
-            if ($user !== null && password_verify($request->password, $user->password)) {       // password_verify(请求数据, 待验证的数据)
-                
+            if ($user !== null && password_verify($request->password, $user->password)) {    // password_verify(请求数据, 待验证的数据)
+                UserSession::set('user', $user);
+                return redirect('user/auth/read')->params(['id' => $user->id]);
+            } else {
+                return redirect('user/session/create')->with('validate', '邮件地址不存在或密码错误');
             }
         }
     }
@@ -92,6 +103,12 @@ class Session extends Controller
      */
     public function delete($id)
     {
-        //
+        dump($id);
+        if (UserSession::has('user') && $id == UserSession::get('user.id')) {
+            UserSession::delete('user');
+            return redirect('user/session/create')->with('validate', '您已退出');
+        } else {
+            return '非法请求';
+        }
     }
 }

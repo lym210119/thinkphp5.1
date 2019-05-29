@@ -5,6 +5,7 @@ namespace app\user\controller;
 use think\Controller;
 use think\Request;
 use app\user\model\User;
+use think\facade\Session;
 
 class Auth extends Controller
 {
@@ -25,9 +26,15 @@ class Auth extends Controller
      */
     public function create()
     {
-        $token = $this->request->token('__token__', 'sha1');
-        $this->assign('token', $token);
-        return $this->fetch();
+        if (Session::has('user')) {
+            $user = Session::get('user');
+            return redirect('user/auth/read')->params(['id' => $user->id]);
+        } else {
+            $token = $this->request->token('__token__', 'sha1');
+            $this->assign('token', $token);
+            return $this->fetch();
+
+        }
     }
 
     /**
@@ -47,6 +54,7 @@ class Auth extends Controller
             return redirect('user/auth/create')->with('validate',$result);
         } else {
             $user = User::create($requestData);
+            Session::set('user', $user);
             return redirect('user/auth/read')->params(['id' => $user->id]); 
         }
     }
@@ -59,9 +67,17 @@ class Auth extends Controller
      */
     public function read($id)
     {
-        $user = User::find($id); // User::find($id) 是模型的一个查询语法,默认查询 $id(主键值)
-        $this->assign('user', $user);
-        return $this->fetch();
+        if (Session::has('user')) {
+            $user = User::find($id); // User::find($id) 是模型的一个查询语法,默认查询 $id(主键值)
+            $token = $this->request->token('__token__', 'sha1');
+            $this->assign([
+                'user' => $user,
+                'token' => $token
+            ]);
+            return $this->fetch();
+        } else {
+            return redirect('user/session/create')->with('validate', '请先登录');
+        }
     }
 
     /**

@@ -1,10 +1,10 @@
 @extends('_layout.default')
 @section('title', '登入')
 @section('content')
-<div class="col-md-offset-2 col-md-8">
+<div class="offset-md-2 col-md-8">
   <div class="panel panel-default mt-5">
     <div class="panel-heading mb-3">
-      <h4>登入</h4>
+      <h4>登录</h4>
     </div>
     @if(session('validate'))
       <div class="alert alert-warning" role="alert">
@@ -16,15 +16,6 @@
             action="{{ url('save') }}">
 
           <input type="hidden" name="__token__" value="{{ $token }}" />
-
-          <div class="input-group mb-3">
-              <div class="input-group-prepend">
-                  <span class="input-group-text">用户名</span>
-              </div>
-              <input type="text"
-                     class="form-control"
-                     name="name">
-          </div>
 
           <div class="input-group mb-3">
               <div class="input-group-prepend">
@@ -44,17 +35,9 @@
                      name="password">
           </div>
 
-          <div class="input-group mb-3">
-              <div class="input-group-prepend">
-                  <span class="input-group-text">确认密码</span>
-              </div>
-              <input type="password"
-                     class="form-control"
-                     name="password_confirm">
-          </div>
 
           <button type="submit"
-                  class="btn btn-primary btn-block">注册</button>
+                  class="btn btn-primary btn-block">登录</button>
       </form>
   </div>
   </div>
