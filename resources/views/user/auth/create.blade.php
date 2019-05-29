@@ -1,7 +1,7 @@
 @extends('_layout.default')
 @section('title', '注册')
 @section('content')
-<div class="col-md-offset-2 col-md-8">
+<div class="offset-md-2 col-md-8">
     <div class="panel panel-default mt-5">
         <div class="panel-heading mb-3">
             <h4>注册</h4>

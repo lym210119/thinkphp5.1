@@ -9,16 +9,16 @@
           </button>
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
-              <li class="nav-item active">
+              <li class="nav-item {{ Request::action() === 'home' ? 'active' : ''}}">
                 <a class="nav-link" href="{{ url('index/home') }}">主页
                   <span class="sr-only">(current)</span>
                 </a>
               </li>
-              <li class="nav-item">
-                <a class="nav-link" href="{{ url('index/about') }}">帮助</a>
+              <li class="nav-item {{ Request::action() === 'help' ? 'active' : ''}}">
+                <a class="nav-link" href="{{ url('index/help') }}">帮助</a>
               </li>
-              <li class="nav-item">
-                <a class="nav-link" href="{{ url('index/help') }}">关于</a>
+              <li class="nav-item {{ Request::action() === 'about' ? 'active' : ''}}">
+                <a class="nav-link" href="{{ url('index/about') }}">关于</a>
               </li>
             </ul>
             <a class="btn btn-outline-success my-2 my-sm-0" href="{{ url('user/auth/create') }}">注册</a>
