@@ -10,6 +10,13 @@ use app\user\model\User;
 
 class Session extends Controller
 {
+    // protected $middleware 则是初始化一个中间件,而 except 方法表示,当前控制器下有哪些方法是不使用中间件的.
+    protected $middleware = [
+        'Auth' => [
+            'except' => ['create', 'save']
+        ]
+    ];
+
     /**
      * 显示资源列表
      *
@@ -27,16 +34,17 @@ class Session extends Controller
      */
     public function create()
     {
-        if (UserSession::has('user')) {
-            $user = UserSession::get('user');
-            return redirect('user/auth/read')->params(['id' => $user->id]);
-        } else {
-            //这一步的目的是将自定义 CSRF Token 传入模板当中.
-            $token = $this->request->token('__token__', 'sha1');
-            $this->assign('token', $token); // assign()为视图引擎分配一个模板变量
-            return $this->fetch(); // 加载模板输出
+        return $this->fetch();
+        // if (UserSession::has('user')) {
+        //     $user = UserSession::get('user');
+        //     return redirect('user/auth/read')->params(['id' => $user->id]);
+        // } else {
+        //     //这一步的目的是将自定义 CSRF Token 传入模板当中.
+        //     $token = $this->request->token('__token__', 'sha1');
+        //     $this->assign('token', $token); // assign()为视图引擎分配一个模板变量
+        //     return $this->fetch(); // 加载模板输出
 
-        }
+        // }
     }
 
     /**
@@ -103,12 +111,15 @@ class Session extends Controller
      */
     public function delete($id)
     {
-        dump($id);
-        if (UserSession::has('user') && $id == UserSession::get('user.id')) {
-            UserSession::delete('user');
-            return redirect('user/session/create')->with('validate', '您已退出');
-        } else {
-            return '非法请求';
-        }
+        // 删除（当前作用域）
+        session('name', null);
+        return redirect('user/session/create')->with('validate', '您已退出');
+        // dump($id);
+        // if (UserSession::has('user') && $id == UserSession::get('user.id')) {
+        //     UserSession::delete('user');
+        //     return redirect('user/session/create')->with('validate', '您已退出');
+        // } else {
+        //     return '非法请求';
+        // }
     }
 }
