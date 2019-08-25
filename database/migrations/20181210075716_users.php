@@ -27,7 +27,7 @@ class Users extends Migrator
      * with the Table class.
      */
 
-    
+
     /**
      * Migrate Up.
      * 运行迁移时做的动作.
@@ -39,8 +39,8 @@ class Users extends Migrator
         $table->addColumn('name', 'string')
             ->addColumn('email', 'string')
             ->addColumn('password', 'string')
-            ->addColumn('avatar', 'string', ['null' => true, 'default'=>NULL, 'comment'=>'用户头像'])
-            ->addColumn('god', 'boolean', ['default'=>FALSE, 'comment'=>'管理员'])
+            ->addColumn('avatar', 'string', ['null' => true, 'default' => NULL, 'comment' => '用户头像'])
+            ->addColumn('god', 'boolean', ['default' => FALSE, 'comment' => '管理员'])
             ->addTimestamps('created_at', 'updated_at')
             ->addIndex('email', ['unique' => true])
             ->addIndex('god')
