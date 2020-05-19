@@ -11,7 +11,7 @@ class Auth extends Controller
 {
     // protected $middleware 则是初始化一个中间件,而 except 方法表示,当前控制器下有哪些方法是不使用中间件的.
     protected $middleware = [
-        'Auth' => [
+        'UserAuthorize' => [
             'except' => ['create', 'save']
         ]
     ];
@@ -101,11 +101,8 @@ class Auth extends Controller
      */
     public function edit($id)
     {
-        $user_id = Session::get('user.id');
-        if (strval($user_id) !== $id) {
-            return redirect('user/auth/edit', ['id' => $user_id]);
-        }
-        $user = User::find($user_id);
+
+        $user = User::find($id);
         $this->assign(['user' => $user]);
         return $this->fetch();
     }
@@ -119,21 +116,17 @@ class Auth extends Controller
      */
     public function update(Request $request, $id)
     {
-        $user_id = Session::get('user.id');
 
-        if (strval($user_id) !== $id) {
-            return redirect('user/auth/edit', ['id' => $user_id])->with('validate', '非法操作');
-        }
         $requestData = $request->put();
         $result = $this->validate($requestData, 'app\user\validate\UpdateUser');
 
         if (true !== $result) {
-            return redirect('user/auth/edit', ['id' => $user_id])->with('validate', $result);
+            return redirect('user/auth/edit', ['id' => $id])->with('validate', $result);
         } else {
             $name = $requestData['name'];
-            User::where('id', $user_id)->update(['name' => $name]);
+            User::where('id', $id)->update(['name' => $name]);
             Session::set('user.name', $name);
-            return redirect('user/auth/edit', ['id' => $user_id])->with('validate', '修改成功');
+            return redirect('user/auth/edit', ['id' => $id])->with('validate', '修改成功');
         }
     }
 

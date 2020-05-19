@@ -39,11 +39,11 @@
                                 </form>
                             </a>
                         </div>
-                        @else
-                        <a class="btn btn-outline-success my-2 my-sm-0" href="{{ url('user/auth/create') }}">注册</a>
-                        <a class="btn btn-outline-success my-2 my-sm-0" href="{{ url('user/session/create') }}">登录</a>
-                        @endif
                     </div>
+                    @else
+                    <a class="btn btn-outline-success my-2 my-sm-0" href="{{ url('user/auth/create') }}">注册</a>
+                    <a class="btn btn-outline-success my-2 my-sm-0" href="{{ url('user/session/create') }}">登录</a>
+                    @endif
                 </div>
         </nav>
     </div>

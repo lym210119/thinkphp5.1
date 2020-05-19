@@ -2,6 +2,8 @@
 
 namespace app\http\middleware;
 
+use think\facade\Hook;
+
 class UserAuthorize
 {
     public function handle($request, \Closure $next)

@@ -12,7 +12,7 @@ class Session extends Controller
 {
     // protected $middleware 则是初始化一个中间件,而 except 方法表示,当前控制器下有哪些方法是不使用中间件的.
     protected $middleware = [
-        'Auth' => [
+        'UserAuthorize' => [
             'except' => ['create', 'save']
         ]
     ];
@@ -112,7 +112,7 @@ class Session extends Controller
     public function delete($id)
     {
         // 删除（当前作用域）
-        session('name', null);
+        session('user', null);
         return redirect('user/session/create')->with('validate', '您已退出');
         // dump($id);
         // if (UserSession::has('user') && $id == UserSession::get('user.id')) {
